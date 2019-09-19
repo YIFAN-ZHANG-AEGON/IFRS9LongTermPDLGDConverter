@@ -7,6 +7,7 @@
 #### the reasonable and supportable PD term and long term PD will be filled.
 #### the one-year lgd will be replaced given the QIA file.
 #### the date format will be corrected to yyyy-mm-dd.
+#### the the reasonable and supportable LGD term and long term LGD will be filled. The 2 terms will be consistent with that of PD.
 #### A new file named 'instrumentReferenceXXXX' will be generated.
 
 ## function inputs:
