@@ -44,3 +44,4 @@ longRunTerm <- ""
 
 successfulRun<-convertSupportTermAndLongRunPDLGD(inputWorkingDirectory,outputWorkingDirectory,idealizedDefaultRateFileName,updatedLGDFileName,instrumentReferenceFileName,portfolioFilter,
                                          supportableTerm,longRunTerm)
+## TEST
