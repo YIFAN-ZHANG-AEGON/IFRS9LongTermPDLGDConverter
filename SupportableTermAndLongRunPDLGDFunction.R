@@ -63,9 +63,11 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
     input_data=input_data[,-ind2]
   }
   
-  ## read in updated one-year LGD
+  ## read in updated one-year LGD (not one by one, column based substitution)
   one_year_lgd=read.csv(updatedLGDFileName,stringsAsFactors = F)
   input_data$lgdOneYear=one_year_lgd$lgdOneYear
+  
+  ## 
   
   ## export the updated file
   input_data[is.na(input_data)]=""  #remove NAs

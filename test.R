@@ -1,6 +1,13 @@
-## function 'convertSupportTermAndLongRunPDLGD': given the following files in folder 'inputWorkingDirectory', the reasonable and supportable PD term and long term PD will be filled, the date format will be corrected to yyyy-mm-dd. A new file named 'instrumentReferenceXXXX' will be generated.
+## function 'convertSupportTermAndLongRunPDLGD': given the following files in folder 'inputWorkingDirectory': 
 #### instrumentReference.csv
 #### idealized default rate.csv
+#### instrumeneReferenceQIAUpdatedLGD
+
+## the following actions are done:
+#### the reasonable and supportable PD term and long term PD will be filled.
+#### the one-year lgd will be replaced given the QIA file.
+#### the date format will be corrected to yyyy-mm-dd.
+#### A new file named 'instrumentReferenceXXXX' will be generated.
 
 ## function inputs:
 #### inputWorkingDirectory: the working directory, and the two input files are expected in the same folder as well.
