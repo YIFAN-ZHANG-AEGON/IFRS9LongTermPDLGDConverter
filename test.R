@@ -6,6 +6,7 @@
 #### inputWorkingDirectory: the working directory, and the two input files are expected in the same folder as well.
 #### outputWorkingDirectory: the output.
 #### idealizedDefaultRateFileName: the name of the idealized default rate file.
+#### updatedLGDFileName: the file contains updated 'lgdOneYear'.
 #### instrumentReferenceFileName: the name of the original instrument reference file.
 #### portfolioFilter: if applicable, the output will only contain the selected portfolio; if set to "" then th filter will not be applied.
 #### supportableTerm: the value of expected 'pdReasonableAndSupportableTerm'.
@@ -27,10 +28,11 @@ source("SupportableTermAndLongRunPDLGDFunction.R")
 inputWorkingDirectory <- workingDirectory
 outputWorkingDirectory <- "C:/Temp/UATScript/temp/"
 idealizedDefaultRateFileName <- "idealized default rate.csv"
+updatedLGDFileName <- "instrumentReferenceQIAUpdatedLGD.csv"
 instrumentReferenceFileName <- "instrumentReference.csv"
 portfolioFilter <- ""
 supportableTerm <-3
 longRunTerm <- ""
 
-successfulRun<-convertSupportTermAndLongRunPDLGD(inputWorkingDirectory,outputWorkingDirectory,idealizedDefaultRateFileName,instrumentReferenceFileName,portfolioFilter,
+successfulRun<-convertSupportTermAndLongRunPDLGD(inputWorkingDirectory,outputWorkingDirectory,idealizedDefaultRateFileName,updatedLGDFileName,instrumentReferenceFileName,portfolioFilter,
                                          supportableTerm,longRunTerm)

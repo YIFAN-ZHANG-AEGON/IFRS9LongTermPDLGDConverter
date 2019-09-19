@@ -8,7 +8,7 @@ library(data.table)
 library(dplyr)
 library(gridExtra)
 
-convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingDirectory,idealizedDefaultRateFileName,instrumentReferenceFileName,portfolioFilter,supportableTerm,longRunTerm)
+convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingDirectory,idealizedDefaultRateFileName,updatedLGDFileName,instrumentReferenceFileName,portfolioFilter,supportableTerm,longRunTerm)
 {
   setwd(inputWorkingDirectory)  # chagne the working directory to folder where idealized default rate file is saved
   require(data.table)
@@ -18,7 +18,7 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
   colnames(def_rate)=c("rating",1:30)
   
   ## Import the instrumentReference template without the mean reversion fields for PD
-  input_data=read.csv(instrumentReferenceFileName,stringsAsFactors = F) # this file should be saved in above folder and if not, change the working directory
+  input_data=read.csv(instrumentReferenceFileName,stringsAsFactors = F) # this file should be saved in above folder
   
   ## add mean reversion fields to instrumentReference. Skip this step if thse fields are already in the template
   input_data$pdReasonableAndSupportableTerm=supportableTerm ## update this to reflect client's inputs
@@ -63,7 +63,9 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
     input_data=input_data[,-ind2]
   }
   
-  ## test git
+  ## read in updated one-year LGD
+  one_year_lgd=read.csv(updatedLGDFileName,stringsAsFactors = F)
+  input_data$lgdOneYear=one_year_lgd$lgdOneYear
   
   ## export the updated file
   input_data[is.na(input_data)]=""  #remove NAs
