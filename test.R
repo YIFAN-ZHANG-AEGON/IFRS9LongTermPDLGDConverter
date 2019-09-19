@@ -1,9 +1,10 @@
-## function 'convertSupportTermAndLongRunPD': given the following files in folder 'inputWorkingDirectory', the reasonable and supportable PD term and long term PD will be filled, the date format will be corrected to yyyy-mm-dd. A new file named 'instrumentReferenceXXXX' will be generated.
+## function 'convertSupportTermAndLongRunPDLGD': given the following files in folder 'inputWorkingDirectory', the reasonable and supportable PD term and long term PD will be filled, the date format will be corrected to yyyy-mm-dd. A new file named 'instrumentReferenceXXXX' will be generated.
 #### instrumentReference.csv
 #### idealized default rate.csv
 
 ## function inputs:
 #### inputWorkingDirectory: the working directory, and the two input files are expected in the same folder as well.
+#### outputWorkingDirectory: the output.
 #### idealizedDefaultRateFileName: the name of the idealized default rate file.
 #### instrumentReferenceFileName: the name of the original instrument reference file.
 #### portfolioFilter: if applicable, the output will only contain the selected portfolio; if set to "" then th filter will not be applied.
@@ -18,17 +19,18 @@
 
 
 ## indicate the location of the function file 'SupportableTermAndLongRunPDFunction.R'
-workingDirectory <-"C:/Temp/UATScript/SupportableTermLongRunPDConversionFunction/"
+workingDirectory <-"C:/Temp/UATScript/IFRS9LongTermPDLGDConverter/"
 setwd(workingDirectory)
-source("SupportableTermAndLongRunPDFunction.R")
+source("SupportableTermAndLongRunPDLGDFunction.R")
 
 ## grant input of the function 'convertSupportTermAndLongRunPD'
-inputWorkingDirectory <- "C:/Temp/UATScript/SupportableTermLongRunPDConversionFunction/"
+inputWorkingDirectory <- workingDirectory
+outputWorkingDirectory <- "C:/Temp/UATScript/temp/"
 idealizedDefaultRateFileName <- "idealized default rate.csv"
 instrumentReferenceFileName <- "instrumentReference.csv"
 portfolioFilter <- ""
 supportableTerm <-3
 longRunTerm <- ""
 
-successfulRun<-convertSupportTermAndLongRunPD(inputWorkingDirectory,idealizedDefaultRateFileName,instrumentReferenceFileName,portfolioFilter,
+successfulRun<-convertSupportTermAndLongRunPDLGD(inputWorkingDirectory,outputWorkingDirectory,idealizedDefaultRateFileName,instrumentReferenceFileName,portfolioFilter,
                                          supportableTerm,longRunTerm)

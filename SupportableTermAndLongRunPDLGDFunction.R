@@ -8,7 +8,7 @@ library(data.table)
 library(dplyr)
 library(gridExtra)
 
-convertSupportTermAndLongRunPD<-function(inputWorkingDirectory,idealizedDefaultRateFileName,instrumentReferenceFileName,portfolioFilter,supportableTerm,longRunTerm)
+convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingDirectory,idealizedDefaultRateFileName,instrumentReferenceFileName,portfolioFilter,supportableTerm,longRunTerm)
 {
   setwd(inputWorkingDirectory)  # chagne the working directory to folder where idealized default rate file is saved
   require(data.table)
@@ -67,6 +67,6 @@ convertSupportTermAndLongRunPD<-function(inputWorkingDirectory,idealizedDefaultR
   
   ## export the updated file
   input_data[is.na(input_data)]=""  #remove NAs
-  readr::write_csv(input_data,tf <- tempfile(pattern="instrumentReference",tmpdir = inputWorkingDirectory,fileext = ".csv")) # saves file in same folder as the input file
+  readr::write_csv(input_data,tf <- tempfile(pattern="instrumentReference",tmpdir = outputWorkingDirectory,fileext = ".csv")) # saves file in same folder as the input file
   return("successful")
 }
