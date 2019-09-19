@@ -67,6 +67,10 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
   one_year_lgd=read.csv(updatedLGDFileName,stringsAsFactors = F)
   input_data$lgdOneYear=one_year_lgd$lgdOneYear
   
+  ## assign lgdReasonableAndSupportableTerm and longRunLGDTerm according to that of PD
+  input_data$lgdReasonableAndSupportableTerm = input_data$pdReasonableAndSupportableTerm
+  input_data$longRunLGDTerm = input_data$longRunPDTerm
+  
   ## generate long-run LGD
   isCorporate <- input_data$assetSubClass1 == "Corporate"
   isSovereign <- input_data$assetSubClass1 == "Sovereign"
