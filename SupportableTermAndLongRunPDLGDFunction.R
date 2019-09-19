@@ -67,8 +67,19 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
   one_year_lgd=read.csv(updatedLGDFileName,stringsAsFactors = F)
   input_data$lgdOneYear=one_year_lgd$lgdOneYear
   
-  ## 
+  ## generate long-run LGD
+  isCorporate <- input_data$assetSubClass1 == "Corporate"
+  isSovereign <- input_data$assetSubClass1 == "Sovereign"
+  isHighTech <- input_data$primaryGcorrFactorNameSector %in% c("COMPUTER HARDWARE","COMPUTER SOFTWARE","SEMICONDUCTORS","TELEPHONE")
+  isUtility <- input_data$primaryGcorrFactorNameSector %in% c("UTILITIES NEC","UTILITIES, ELECTRIC","UTILITIES, GAS")
   
+  isCorporateAndHighTech <- isCorporate & isHighTech
+  isCorporateAndUtility <- isCorporate & isUtility
+  
+  input_data$longRunLGD <- 0.48
+  input_data$longRunLGD[isCorporateAndHighTech] <- 0.59 
+  input_data$longRunLGD[isCorporateAndUtility] <- 0.22 
+
   ## export the updated file
   input_data[is.na(input_data)]=""  #remove NAs
   readr::write_csv(input_data,tf <- tempfile(pattern="instrumentReference",tmpdir = outputWorkingDirectory,fileext = ".csv")) # saves file in same folder as the input file
