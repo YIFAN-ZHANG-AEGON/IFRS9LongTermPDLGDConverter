@@ -28,8 +28,9 @@
 
 
 ## indicate the location of the function file 'SupportableTermAndLongRunPDFunction.R'
-workingDirectory <-"C:/Temp/UATScript/IFRS9LongTermPDLGDConverter/"
+workingDirectory <-"C:/Temp/UATScript/LongTermPDLGDConverter/"
 setwd(workingDirectory)
+View(convertSupportTermAndLongRunPDLGD)
 source("SupportableTermAndLongRunPDLGDFunction.R")
 
 ## grant input of the function 'convertSupportTermAndLongRunPD'
@@ -38,10 +39,9 @@ outputWorkingDirectory <- "C:/Temp/UATScript/temp/"
 idealizedDefaultRateFileName <- "idealized default rate.csv"
 updatedLGDFileName <- "instrumentReferenceQIAUpdatedLGD.csv"
 instrumentReferenceFileName <- "instrumentReference.csv"
-portfolioFilter <- ""
-supportableTerm <-3
-longRunTerm <- ""
+portfolioFilter <- "TA_New_USA3"
+supportableTerm <-5
+longRunTerm <- 6
 
 successfulRun<-convertSupportTermAndLongRunPDLGD(inputWorkingDirectory,outputWorkingDirectory,idealizedDefaultRateFileName,updatedLGDFileName,instrumentReferenceFileName,portfolioFilter,
                                          supportableTerm,longRunTerm)
-## TEST

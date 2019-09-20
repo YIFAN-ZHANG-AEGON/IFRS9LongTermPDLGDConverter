@@ -36,14 +36,6 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
   input_data$ytm=(input_data$maturityDate-input_data$asOfDate)/365.25  # calculate the remaining maturity in years using maturity date and as of date
   head(input_data$ytm)
   
-  
-  if (portfolioFilter !=""){
-    ## filter on portfolioIdentifier
-    input_data <-
-      input_data %>%
-      filter(portfolioIdentifier == portfolioFilter)
-  }
-  
   if (longRunTerm !=""){
     ## Calculate the long run forward PD
     for (i in 1:nrow(input_data)){
@@ -84,6 +76,12 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
   input_data$longRunLGD[isCorporateAndHighTech] <- 0.59 
   input_data$longRunLGD[isCorporateAndUtility] <- 0.22 
 
+  if (portfolioFilter !=""){
+    ## filter on portfolioIdentifier
+    input_data <-
+      input_data %>%
+      filter(portfolioIdentifier == portfolioFilter)
+  }
   ## export the updated file
   input_data[is.na(input_data)]=""  #remove NAs
   readr::write_csv(input_data,tf <- tempfile(pattern="instrumentReference",tmpdir = outputWorkingDirectory,fileext = ".csv")) # saves file in same folder as the input file
