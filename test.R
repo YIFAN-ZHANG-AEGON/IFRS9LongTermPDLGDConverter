@@ -21,11 +21,14 @@
 #### longRunTerm: the value of expected 'longRunPDTerm'.
 
 ## function output:
-#### a csv file named 'instrumentReferenceXXXX.csv' will be generated with the modified 'pdReasonableAndSupportableTerm', 'longRunPDTerm', 'longRunPD' is saved in the 'inputWorkingDirectory'.
+#### a csv file named 'instrumentReferenceXXXX.csv' will be generated in the 'inputWorkingDirectory'：
+###### the columns 'pdReasonableAndSupportableTerm', 'longRunPDTerm', 'longRunForwardPD'are modified
+###### the columns 'lgdReasonableAndSupportableTerm', 'longRunLGDTerm', 'longRunLGD'are modified
+###### the column 'lgdOneyear' is modified
+###### the date columns are converted to yyyy-mm-dd
 #### the function will return a string 'successful'.
 
 ## below is an example:
-
 
 ## indicate the location of the function file 'SupportableTermAndLongRunPDFunction.R'
 workingDirectory <-"C:/Temp/UATScript/LongTermPDLGDConverter/"
@@ -45,3 +48,4 @@ longRunTerm <- 6
 
 successfulRun<-convertSupportTermAndLongRunPDLGD(inputWorkingDirectory,outputWorkingDirectory,idealizedDefaultRateFileName,updatedLGDFileName,instrumentReferenceFileName,portfolioFilter,
                                          supportableTerm,longRunTerm)
+
