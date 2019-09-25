@@ -8,7 +8,7 @@ library(data.table)
 library(dplyr)
 library(gridExtra)
 
-convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingDirectory,idealizedDefaultRateFileName,updatedLGDFileName,instrumentReferenceFileName,portfolioFilter,supportableTerm,longRunTerm)
+convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingDirectory,idealizedDefaultRateFileName,longRunLGDFileName,updatedLGDFileName,instrumentReferenceFileName,portfolioFilter,supportableTerm,longRunTerm)
 {
   setwd(inputWorkingDirectory)  # chagne the working directory to folder where idealized default rate file is saved
   require(data.table)
@@ -41,7 +41,8 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
     for (i in 1:nrow(input_data)){
       input_data$matbucket[i]=min(30,max(longRunTerm+1,round(input_data$ytm[i],0)))
       if( input_data$longTermRatingForPD[i] %in% c("C","Ca","D")){
-        input_data$longRunAnnualizedForwardPD[i]=1} else{
+        input_data$longRunAnnualizedForwardPD[i]=1} 
+      else{
           cpd1=def_rate[which(def_rate$rating==input_data$longTermRatingForPD[i]),which(colnames(def_rate)==longRunTerm)]
           cpd2=def_rate[which(def_rate$rating==input_data$longTermRatingForPD[i]),which(colnames(def_rate)==input_data$matbucket[i])]
           input_data$longRunAnnualizedForwardPD[i]=1-((1-cpd2)/(1-cpd1))^(1/(input_data$matbucket[i]-longRunTerm))
@@ -63,25 +64,29 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
   input_data$lgdReasonableAndSupportableTerm = input_data$pdReasonableAndSupportableTerm
   input_data$longRunLGDTerm = input_data$longRunPDTerm
   
-  ## generate long-run LGD
-  isCorporate <- input_data$assetSubClass1 == "Corporate"
-  isSovereign <- input_data$assetSubClass1 == "Sovereign"
-  isHighTech <- input_data$primaryGcorrFactorNameSector %in% c("COMPUTER HARDWARE","COMPUTER SOFTWARE","SEMICONDUCTORS","TELEPHONE")
-  isUtility <- input_data$primaryGcorrFactorNameSector %in% c("UTILITIES NEC","UTILITIES, ELECTRIC","UTILITIES, GAS")
+  ## read long run LGD Table
+  long_run_LGD=read.csv(longRunLGDFileName,stringsAsFactors = F) # this file should be saved in above folder
   
-  isCorporateAndHighTech <- isCorporate & isHighTech
-  isCorporateAndUtility <- isCorporate & isUtility
+  browser()
+  ## apply the filter and assign the value
+  for (i in 1:nrow(long_run_LGD)){
+    ## find where asset class is 'REST' and industry is 'REST' and assign all the longRunLGD with that value
+    if(long_run_LGD$assetSubClass1[i]=="REST" && long_run_LGD$primaryGcorrFactorNameSector[i]=="REST"){
+      input_data$longRunLGD <- long_run_LGD[i,which(colnames(long_run_LGD)=="longRunLGD")]} 
+    else{
+       assetFilter <- input_data$assetSubClass1 == long_run_LGD[i,which(colnames(long_run_LGD)=="assetSubClass1")]
+       industryFilter <- input_data$primaryGcorrFactorNameSector == long_run_LGD[i,which(colnames(long_run_LGD)=="primaryGcorrFactorNameSector")]
+       assetAndIndustryFilter <- assetFilter & industryFilter
+       input_data$longRunLGD[assetAndIndustryFilter] <- long_run_LGD[i,which(colnames(long_run_LGD)=="longRunLGD")]}
+  }
   
-  input_data$longRunLGD <- 0.48
-  input_data$longRunLGD[isCorporateAndHighTech] <- 0.59 
-  input_data$longRunLGD[isCorporateAndUtility] <- 0.22 
-
+  ## filter on portfolioIdentifier
   if (portfolioFilter !=""){
-    ## filter on portfolioIdentifier
     input_data <-
       input_data %>%
       filter(portfolioIdentifier == portfolioFilter)
   }
+  
   ## export the updated file
   input_data[is.na(input_data)]=""  #remove NAs
   readr::write_csv(input_data,tf <- tempfile(pattern="instrumentReference",tmpdir = outputWorkingDirectory,fileext = ".csv")) # saves file in same folder as the input file

@@ -40,12 +40,12 @@ source("SupportableTermAndLongRunPDLGDFunction.R")
 inputWorkingDirectory <- workingDirectory
 outputWorkingDirectory <- "C:/Temp/UATScript/temp/"
 idealizedDefaultRateFileName <- "idealized default rate.csv"
+longRunLGDFileName <- "long run LGD.csv"
 updatedLGDFileName <- "instrumentReferenceQIAUpdatedLGD.csv"
 instrumentReferenceFileName <- "instrumentReference.csv"
 portfolioFilter <- "TA_New_USA3"
 supportableTerm <-5
 longRunTerm <- 6
 
-successfulRun<-convertSupportTermAndLongRunPDLGD(inputWorkingDirectory,outputWorkingDirectory,idealizedDefaultRateFileName,updatedLGDFileName,instrumentReferenceFileName,portfolioFilter,
+successfulRun<-convertSupportTermAndLongRunPDLGD(inputWorkingDirectory,outputWorkingDirectory,idealizedDefaultRateFileName,longRunLGDFileName,updatedLGDFileName,instrumentReferenceFileName,portfolioFilter,
                                          supportableTerm,longRunTerm)
-#test
