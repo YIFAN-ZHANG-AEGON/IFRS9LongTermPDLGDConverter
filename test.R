@@ -30,8 +30,8 @@
 ## indicate the location of the function file 'SupportableTermAndLongRunPDFunction.R'
 workingDirectory <-"C:/Temp/UATScript/LongTermPDLGDConverter/"
 setwd(workingDirectory)
-View(convertSupportTermAndLongRunPDLGD)
 source("SupportableTermAndLongRunPDLGDFunction.R")
+View(convertSupportTermAndLongRunPDLGD)
 
 ## grant input of the function 'convertSupportTermAndLongRunPD'
 inputWorkingDirectory <- workingDirectory

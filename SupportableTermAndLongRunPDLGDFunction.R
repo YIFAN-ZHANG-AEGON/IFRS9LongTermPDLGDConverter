@@ -13,12 +13,13 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
   setwd(inputWorkingDirectory)  # chagne the working directory to folder where idealized default rate file is saved
   require(data.table)
   
+  ## Import the instrumentReference template without the mean reversion fields for PD
+  input_data=read.csv(instrumentReferenceFileName,stringsAsFactors = F) # this file should be saved in above folder
+  
   ## Idealized Default Rate Table
   def_rate=read.csv(idealizedDefaultRateFileName,stringsAsFactors = F) # this file should be saved in above folder
   colnames(def_rate)=c("rating",1:30)
   
-  ## Import the instrumentReference template without the mean reversion fields for PD
-  input_data=read.csv(instrumentReferenceFileName,stringsAsFactors = F) # this file should be saved in above folder
   
   ## add mean reversion fields to instrumentReference. Skip this step if thse fields are already in the template
   input_data$pdReasonableAndSupportableTerm=supportableTerm 
@@ -55,10 +56,6 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
     ind2=grep("ytm",colnames(input_data),ignore.case = T)
     input_data=input_data[,-ind2]
   }
-  
-  ## read in updated one-year LGD (not one by one, column based substitution)
-  one_year_lgd=read.csv(updatedLGDFileName,stringsAsFactors = F)
-  input_data$lgdOneYear=one_year_lgd$lgdOneYear
   
   ## assign lgdReasonableAndSupportableTerm and longRunLGDTerm according to that of PD
   input_data$lgdReasonableAndSupportableTerm = input_data$pdReasonableAndSupportableTerm
