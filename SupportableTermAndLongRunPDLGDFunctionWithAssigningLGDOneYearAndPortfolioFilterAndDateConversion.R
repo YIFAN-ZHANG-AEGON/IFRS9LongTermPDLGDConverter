@@ -8,7 +8,7 @@ library(data.table)
 library(dplyr)
 library(gridExtra)
 
-convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingDirectory,idealizedDefaultRateFileName,longRunLGDFileName,instrumentReferenceFileName,supportableTerm,longRunTerm)
+convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingDirectory,idealizedDefaultRateFileName,longRunLGDFileName,updatedLGDFileName,instrumentReferenceFileName,portfolioFilter,supportableTerm,longRunTerm)
 {
   setwd(inputWorkingDirectory)  # chagne the working directory to folder where idealized default rate file is saved
   require(data.table)
@@ -21,7 +21,7 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
   input_data=read.csv(instrumentReferenceFileName,stringsAsFactors = F) # this file should be saved in above folder
   
   ## add mean reversion fields to instrumentReference. Skip this step if thse fields are already in the template
-  input_data$pdReasonableAndSupportableTerm=supportableTerm 
+  input_data$pdReasonableAndSupportableTerm=supportableTerm ## update this to reflect client's inputs
   if (longRunTerm ==""){
     input_data$longRunPDTerm=NA
   }
@@ -29,11 +29,11 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
     input_data$longRunPDTerm=longRunTerm
   }
   
-  # calculate the remaining maturity in years using maturity date and as of 
+  ## convert date format
   input_data$asOfDate=as.Date(mdy(input_data$asOfDate),"%Y-%m-%d")
   input_data$maturityDate=as.Date(mdy(input_data$maturityDate),"%Y-%m-%d")
   input_data$originationDate=as.Date(mdy(input_data$originationDate),"%Y-%m-%d")
-  input_data$ytm <- (input_data$maturityDate-input_data$asOfDate)/365.25  
+  input_data$ytm=(input_data$maturityDate-input_data$asOfDate)/365.25  # calculate the remaining maturity in years using maturity date and as of date
   head(input_data$ytm)
   
   if (longRunTerm !=""){
@@ -67,6 +67,7 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
   ## read long run LGD Table
   long_run_LGD=read.csv(longRunLGDFileName,stringsAsFactors = F) # this file should be saved in above folder
   
+  browser()
   ## apply the filter and assign the value
   for (i in 1:nrow(long_run_LGD)){
     ## find where asset class is 'REST' and industry is 'REST' and assign all the longRunLGD with that value
@@ -77,6 +78,13 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
        industryFilter <- input_data$primaryGcorrFactorNameSector == long_run_LGD[i,which(colnames(long_run_LGD)=="primaryGcorrFactorNameSector")]
        assetAndIndustryFilter <- assetFilter & industryFilter
        input_data$longRunLGD[assetAndIndustryFilter] <- long_run_LGD[i,which(colnames(long_run_LGD)=="longRunLGD")]}
+  }
+  
+  ## filter on portfolioIdentifier
+  if (portfolioFilter !=""){
+    input_data <-
+      input_data %>%
+      filter(portfolioIdentifier == portfolioFilter)
   }
   
   ## export the updated file
