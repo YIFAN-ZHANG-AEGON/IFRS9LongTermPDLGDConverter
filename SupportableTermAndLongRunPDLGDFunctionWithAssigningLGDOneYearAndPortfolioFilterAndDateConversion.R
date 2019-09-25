@@ -13,12 +13,12 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
   setwd(inputWorkingDirectory)  # chagne the working directory to folder where idealized default rate file is saved
   require(data.table)
   
+  ## Import the instrumentReference template without the mean reversion fields for PD
+  input_data=read.csv(instrumentReferenceFileName,stringsAsFactors = F) # this file should be saved in above folder
+  
   ## Idealized Default Rate Table
   def_rate=read.csv(idealizedDefaultRateFileName,stringsAsFactors = F) # this file should be saved in above folder
   colnames(def_rate)=c("rating",1:30)
-  
-  ## Import the instrumentReference template without the mean reversion fields for PD
-  input_data=read.csv(instrumentReferenceFileName,stringsAsFactors = F) # this file should be saved in above folder
   
   ## add mean reversion fields to instrumentReference. Skip this step if thse fields are already in the template
   input_data$pdReasonableAndSupportableTerm=supportableTerm ## update this to reflect client's inputs
@@ -56,10 +56,6 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
     input_data=input_data[,-ind2]
   }
   
-  ## read in updated one-year LGD (not one by one, column based substitution)
-  one_year_lgd=read.csv(updatedLGDFileName,stringsAsFactors = F)
-  input_data$lgdOneYear=one_year_lgd$lgdOneYear
-  
   ## assign lgdReasonableAndSupportableTerm and longRunLGDTerm according to that of PD
   input_data$lgdReasonableAndSupportableTerm = input_data$pdReasonableAndSupportableTerm
   input_data$longRunLGDTerm = input_data$longRunPDTerm
@@ -67,7 +63,6 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
   ## read long run LGD Table
   long_run_LGD=read.csv(longRunLGDFileName,stringsAsFactors = F) # this file should be saved in above folder
   
-  browser()
   ## apply the filter and assign the value
   for (i in 1:nrow(long_run_LGD)){
     ## find where asset class is 'REST' and industry is 'REST' and assign all the longRunLGD with that value
@@ -78,13 +73,6 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
        industryFilter <- input_data$primaryGcorrFactorNameSector == long_run_LGD[i,which(colnames(long_run_LGD)=="primaryGcorrFactorNameSector")]
        assetAndIndustryFilter <- assetFilter & industryFilter
        input_data$longRunLGD[assetAndIndustryFilter] <- long_run_LGD[i,which(colnames(long_run_LGD)=="longRunLGD")]}
-  }
-  
-  ## filter on portfolioIdentifier
-  if (portfolioFilter !=""){
-    input_data <-
-      input_data %>%
-      filter(portfolioIdentifier == portfolioFilter)
   }
   
   ## export the updated file
