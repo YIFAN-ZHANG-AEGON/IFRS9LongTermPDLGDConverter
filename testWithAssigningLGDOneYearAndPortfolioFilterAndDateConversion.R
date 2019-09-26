@@ -34,7 +34,7 @@
 workingDirectory <-"C:/Temp/UATScript/LongTermPDLGDConverter/"
 setwd(workingDirectory)
 View(convertSupportTermAndLongRunPDLGD)
-source("SupportableTermAndLongRunPDLGDFunction.R")
+source("SupportableTermAndLongRunPDLGDFunctionWithAssigningLGDOneYearAndPortfolioFilterAndDateConversion.R")
 
 ## grant input of the function 'convertSupportTermAndLongRunPD'
 inputWorkingDirectory <- workingDirectory
