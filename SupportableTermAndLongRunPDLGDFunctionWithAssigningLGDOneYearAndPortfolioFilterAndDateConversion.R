@@ -76,7 +76,6 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
   }
   
   ## export the updated file
-  input_data[is.na(input_data)]=""  #remove NAs
-  readr::write_csv(input_data,tf <- tempfile(pattern="instrumentReference",tmpdir = outputWorkingDirectory,fileext = ".csv")) # saves file in same folder as the input file
+  readr::write_csv(input_data,tf <- tempfile(pattern="instrumentReference",tmpdir = outputWorkingDirectory,fileext = ".csv"), na="") # saves file in same folder as the input file
   return("successful")
 }

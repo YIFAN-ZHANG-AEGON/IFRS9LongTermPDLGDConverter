@@ -79,7 +79,7 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
   
   ## read long run LGD Table
   long_run_LGD=read.csv(longRunLGDFileName,stringsAsFactors = F) # this file should be saved in above folder
-  
+
   ## apply the filter and assign the value
   for (i in 1:nrow(long_run_LGD)){
     ## find where asset class is 'REST' and industry is 'REST' and assign all the longRunLGD with that value
@@ -91,9 +91,8 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
        assetAndIndustryFilter <- assetFilter & industryFilter
        input_data$longRunLGD[assetAndIndustryFilter] <- long_run_LGD[i,which(colnames(long_run_LGD)=="longRunLGD")]}
   }
-  
+  browser()
   ## export the updated file
-  input_data[is.na(input_data)]=""  #remove NAs
-  readr::write_csv(input_data,tf <- tempfile(pattern="instrumentReference",tmpdir = outputWorkingDirectory,fileext = ".csv")) # saves file in same folder as the input file
+  readr::write_csv(input_data,tf <- tempfile(pattern="instrumentReference",tmpdir = outputWorkingDirectory,fileext = ".csv"), na="") # saves file in same folder as the input file
   return("successful")
 }
