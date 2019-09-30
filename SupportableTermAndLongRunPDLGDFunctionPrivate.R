@@ -32,14 +32,13 @@ library(data.table)
 library(dplyr)
 library(gridExtra)
 
-convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingDirectory,idealizedDefaultRateFileName,longRunLGDFileName,instrumentReferenceFileName,supportableTerm,longRunTerm)
+convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingDirectory,privateForwardPDFileName,longRunLGDFileName,instrumentReferenceFileName,supportableTerm,longRunTerm)
 {
   setwd(inputWorkingDirectory)  # chagne the working directory to folder where idealized default rate file is saved
   require(data.table)
   
   ## Import the instrumentReference template without the mean reversion fields for PD
   input_data=read.csv(instrumentReferenceFileName,stringsAsFactors = F) # this file should be saved in above folder
-  
   # calculate the remaining maturity in years using maturity date and as of 
   input_data$asOfDate=as.Date(mdy(input_data$asOfDate),"%Y-%m-%d")
   input_data$maturityDate=as.Date(mdy(input_data$maturityDate),"%Y-%m-%d")
@@ -47,12 +46,8 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
   input_data$ytm <- (input_data$maturityDate-input_data$asOfDate)/365.25  
   head(input_data$ytm)
   
-  ## 
-  
-  ## Idealized Default Rate Table
-  def_rate=read.csv(idealizedDefaultRateFileName,stringsAsFactors = F) # this file should be saved in above folder
-  colnames(def_rate)=c("rating",1:30)
-  
+  ## long run forward PD private
+  private_forward_PD =read.csv(privateForwardPDFileName,stringsAsFactors = F) # this file should be saved in above folder
   
   ## add mean reversion fields to instrumentReference. Skip this step if thse fields are already in the template
   input_data$pdReasonableAndSupportableTerm=supportableTerm 
@@ -62,25 +57,20 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
   else{
     input_data$longRunPDTerm=longRunTerm
   }
-  
+
   if (longRunTerm !=""){
     ## Calculate the long run forward PD
     for (i in 1:nrow(input_data)){
-      input_data$matbucket[i]=min(30,max(longRunTerm+1,round(input_data$ytm[i],0)))
-      if( input_data$longTermRatingForPD[i] %in% c("C","Ca","D")){
-        input_data$longRunAnnualizedForwardPD[i]=1} 
+      if (input_data$longTermRatingForPD[i]!=""){
+        input_data$longRunAnnualizedForwardPD[i]=private_forward_PD[which(private_forward_PD$Rating==input_data$longTermRatingForPD[i]),2]
+      }
+      else if (input_data$internalRatingInitial[i]!="") {
+        input_data$longRunAnnualizedForwardPD[i]=private_forward_PD[which(private_forward_PD$Rating==input_data$longTermRatingForPD[i]),2]
+      }
       else{
-          cpd1=def_rate[which(def_rate$rating==input_data$longTermRatingForPD[i]),which(colnames(def_rate)==longRunTerm)]
-          cpd2=def_rate[which(def_rate$rating==input_data$longTermRatingForPD[i]),which(colnames(def_rate)==input_data$matbucket[i])]
-          input_data$longRunAnnualizedForwardPD[i]=1-((1-cpd2)/(1-cpd1))^(1/(input_data$matbucket[i]-longRunTerm))
-        }
+        input_data$longRunAnnualizedForwardPD[i]=private_forward_PD[which(private_forward_PD$Rating=="B1"),2]
+      }
     }
-    
-    ## remove calculated fields from input file
-    ind1=grep("matbucket",colnames(input_data),ignore.case = T)
-    input_data=input_data[,-ind1]
-    ind2=grep("ytm",colnames(input_data),ignore.case = T)
-    input_data=input_data[,-ind2]
   }
   
   ## assign lgdReasonableAndSupportableTerm and longRunLGDTerm according to that of PD
