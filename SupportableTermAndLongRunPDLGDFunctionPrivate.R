@@ -32,7 +32,7 @@ library(data.table)
 library(dplyr)
 library(gridExtra)
 
-convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingDirectory,privateForwardPDFileName,CNLPRatingFileName,longRunLGDFileName,instrumentReferenceFileName,supportableTerm,longRunTerm)
+convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingDirectory,privateForwardPDFileName,CNLPRatingFileName,securedInformationFileName,longRunLGDFileName,instrumentReferenceFileName,supportableTerm,longRunTerm)
 {
   setwd(inputWorkingDirectory)  # chagne the working directory to folder where idealized default rate file is saved
   require(data.table)
@@ -49,7 +49,7 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
   
   ## CNLP rating
   CNLP_Rating =read.csv(CNLPRatingFileName,stringsAsFactors = F) # this file should be saved in above folder
-  
+  input_data <-left_join(CNLP_Rating, input_data, by="instrumentIdentifier")
   ## add mean reversion fields to instrumentReference. Skip this step if thse fields are already in the template
   input_data$pdReasonableAndSupportableTerm=supportableTerm 
   if (longRunTerm ==""){
@@ -62,13 +62,9 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
   if (longRunTerm !=""){
     ## Calculate the long run forward PD
     for (i in 1:nrow(input_data)){
-      rating <- CNLP_Rating[which(CNLP_Rating$instrumentIdentifier==input_data$instrumentIdentifier[i]),which(colnames(CNLP_Rating)=="CNLP_rating")]
-      print(rating)
+      rating <- input_data$CNLP_rating[i]
       if (rating!=""){
         input_data$longRunAnnualizedForwardPD[i]=private_forward_PD[which(private_forward_PD$Rating==rating),which(colnames(private_forward_PD)=="longRunForwardPD")]
-      }
-      else{
-        input_data$longRunAnnualizedForwardPD[i]=private_forward_PD[which(private_forward_PD$Rating=="C"),which(colnames(private_forward_PD)=="longRunForwardPD")]
       }
     }
   }
@@ -77,21 +73,35 @@ convertSupportTermAndLongRunPDLGD<-function(inputWorkingDirectory,outputWorkingD
   input_data$lgdReasonableAndSupportableTerm = input_data$pdReasonableAndSupportableTerm
   input_data$longRunLGDTerm = input_data$longRunPDTerm
   
+  ## read secured columns     
+  secured_information =read.csv(securedInformationFileName,stringsAsFactors = F) # this file should be saved in above folder
+  input_data <-left_join(input_data,secured_information,  by="instrumentIdentifier")
+  input_data <-mutate(input_data, securedAndUnsecured = case_when(SeniorityAndSecurity=="Muni" ~ "Secured",
+                                                                  SeniorityAndSecurity=="SecuredTermLoan" ~ "Secured",
+                                                                  SeniorityAndSecurity=="SeniorSecuredBond" ~ "Secured",
+                                                                  SeniorityAndSecurity=="SeniorUnsecuredBond" ~ "Unsecured",
+                                                                  SeniorityAndSecurity=="SubordinateBond" ~ "Unsecured",))
   
   ## read long run LGD Table
   long_run_LGD=read.csv(longRunLGDFileName,stringsAsFactors = F) # this file should be saved in above folder
   
   ## apply the filter and assign the value
   for (i in 1:nrow(long_run_LGD)){
+    ## obtain secured filter
+    securedFilter <- input_data$securedAndUnsecured == long_run_LGD[i,which(colnames(long_run_LGD)=="securedAndUnsecured")]
     ## find where asset class is 'REST' and industry is 'REST' and assign all the longRunLGD with that value
-    if(long_run_LGD$assetSubClass1[i]=="REST" && long_run_LGD$primaryGcorrFactorNameSector[i]=="REST"){
-      input_data$longRunLGD <- long_run_LGD[i,which(colnames(long_run_LGD)=="longRunLGD")]} 
+    if(long_run_LGD$primaryGcorrFactorNameSector[i]=="REST"){
+      input_data$longRunLGD[securedFilter] <- long_run_LGD[i,which(colnames(long_run_LGD)=="longRunLGD")]}
     else{
-       assetFilter <- input_data$assetSubClass1 == long_run_LGD[i,which(colnames(long_run_LGD)=="assetSubClass1")]
        industryFilter <- input_data$primaryGcorrFactorNameSector == long_run_LGD[i,which(colnames(long_run_LGD)=="primaryGcorrFactorNameSector")]
-       assetAndIndustryFilter <- industryFilter
-       input_data$longRunLGD[assetAndIndustryFilter] <- long_run_LGD[i,which(colnames(long_run_LGD)=="longRunLGD")]}
+       securedAndIndustryFilter <- securedFilter & industryFilter
+       input_data$longRunLGD[securedAndIndustryFilter] <- long_run_LGD[i,which(colnames(long_run_LGD)=="longRunLGD")]}
   }
+  
+  input_data <-input_data[,-grep('CNLP_rating', colnames(input_data))]
+  input_data <-input_data[,-grep('SeniorityAndSecurity', colnames(input_data))]
+  input_data <-input_data[,-grep('securedAndUnsecured', colnames(input_data))]
+
   ## export the updated file
   readr::write_csv(input_data,tf <- tempfile(pattern="instrumentReference",tmpdir = outputWorkingDirectory,fileext = ".csv"), na="") # saves file in same folder as the input file
   return("successful")

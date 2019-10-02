@@ -38,10 +38,11 @@ inputWorkingDirectory <- workingDirectory
 outputWorkingDirectory <- "C:/Temp/UATScript/temp/"
 privateForwardPDFileName <- "long run forward PD private.csv"
 CNLPRatingFileName <- "CNLP rating.csv"
+securedInformationFileName <- "secured information.csv"
 longRunLGDFileName <- "long run LGD private.csv"
 instrumentReferenceFileName <- "instrumentReference.csv"
 supportableTerm <-5
 longRunTerm <- 6
 
-successfulRun<-convertSupportTermAndLongRunPDLGD(inputWorkingDirectory,outputWorkingDirectory,privateForwardPDFileName,CNLPRatingFileName,longRunLGDFileName,instrumentReferenceFileName,
+successfulRun<-convertSupportTermAndLongRunPDLGD(inputWorkingDirectory,outputWorkingDirectory,privateForwardPDFileName,CNLPRatingFileName,securedInformationFileName,longRunLGDFileName,instrumentReferenceFileName,
                                          supportableTerm,longRunTerm)

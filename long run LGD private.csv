@@ -1,8 +1,15 @@
-assetSubClass1,primaryGcorrFactorNameSector,longRunLGD
-REST,REST,0.18
-private,COMPUTER HARDWARE,0.3
-private,COMPUTER SOFTWARE,0.3
-private,SEMICONDUCTORS,0.3
-private,UTILITIES NEC,0.04
-private,"UTILITIES, ELECTRIC",0.04
-private,"UTILITIES, GAS",0.04
+assetSubClass1,securedAndUnsecured,primaryGcorrFactorNameSector,longRunLGD
+private,Unsecured,REST,0.36
+private,Unsecured,COMPUTER HARDWARE,0.48
+private,Unsecured,COMPUTER SOFTWARE,0.48
+private,Unsecured,SEMICONDUCTORS,0.48
+private,Unsecured,UTILITIES NEC,0.11
+private,Unsecured,"UTILITIES, ELECTRIC",0.11
+private,Unsecured,"UTILITIES, GAS",0.11
+private,Secured,REST,0.18
+private,Secured,COMPUTER HARDWARE,0.3
+private,Secured,COMPUTER SOFTWARE,0.3
+private,Secured,SEMICONDUCTORS,0.3
+private,Secured,UTILITIES NEC,0.04
+private,Secured,"UTILITIES, ELECTRIC",0.04
+private,Secured,"UTILITIES, GAS",0.04
