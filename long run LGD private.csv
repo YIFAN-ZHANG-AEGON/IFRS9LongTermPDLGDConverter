@@ -1,15 +1,43 @@
-assetSubClass1,securedAndUnsecured,primaryGcorrFactorNameSector,longRunLGD
-private,Unsecured,REST,0.36
-private,Unsecured,COMPUTER HARDWARE,0.48
-private,Unsecured,COMPUTER SOFTWARE,0.48
-private,Unsecured,SEMICONDUCTORS,0.48
-private,Unsecured,UTILITIES NEC,0.11
-private,Unsecured,"UTILITIES, ELECTRIC",0.11
-private,Unsecured,"UTILITIES, GAS",0.11
-private,Secured,REST,0.18
-private,Secured,COMPUTER HARDWARE,0.3
-private,Secured,COMPUTER SOFTWARE,0.3
-private,Secured,SEMICONDUCTORS,0.3
-private,Secured,UTILITIES NEC,0.04
-private,Secured,"UTILITIES, ELECTRIC",0.04
-private,Secured,"UTILITIES, GAS",0.04
+assetSubClass1,Region,securedAndUnsecured,primaryGcorrFactorNameSector,longRunLGD
+private,US/Japan,Unsecured,REST,0.36
+private,US/Japan,Unsecured,COMPUTER HARDWARE,0.48
+private,US/Japan,Unsecured,COMPUTER SOFTWARE,0.48
+private,US/Japan,Unsecured,SEMICONDUCTORS,0.48
+private,US/Japan,Unsecured,UTILITIES NEC,0.11
+private,US/Japan,Unsecured,"UTILITIES, ELECTRIC",0.11
+private,US/Japan,Unsecured,"UTILITIES, GAS",0.11
+private,US/Japan,Secured,REST,0.18
+private,US/Japan,Secured,COMPUTER HARDWARE,0.3
+private,US/Japan,Secured,COMPUTER SOFTWARE,0.3
+private,US/Japan,Secured,SEMICONDUCTORS,0.3
+private,US/Japan,Secured,UTILITIES NEC,0.04
+private,US/Japan,Secured,"UTILITIES, ELECTRIC",0.04
+private,US/Japan,Secured,"UTILITIES, GAS",0.04
+private,EU/Developing Countries,Unsecured,REST,0.48
+private,EU/Developing Countries,Unsecured,COMPUTER HARDWARE,0.6
+private,EU/Developing Countries,Unsecured,COMPUTER SOFTWARE,0.6
+private,EU/Developing Countries,Unsecured,SEMICONDUCTORS,0.6
+private,EU/Developing Countries,Unsecured,UTILITIES NEC,0.23
+private,EU/Developing Countries,Unsecured,"UTILITIES, ELECTRIC",0.23
+private,EU/Developing Countries,Unsecured,"UTILITIES, GAS",0.23
+private,EU/Developing Countries,Secured,REST,0.3
+private,EU/Developing Countries,Secured,COMPUTER HARDWARE,0.42
+private,EU/Developing Countries,Secured,COMPUTER SOFTWARE,0.42
+private,EU/Developing Countries,Secured,SEMICONDUCTORS,0.42
+private,EU/Developing Countries,Secured,UTILITIES NEC,0.16
+private,EU/Developing Countries,Secured,"UTILITIES, ELECTRIC",0.16
+private,EU/Developing Countries,Secured,"UTILITIES, GAS",0.16
+public,US/Japan,Unsecured,REST,0.48
+public,US/Japan,Unsecured,COMPUTER HARDWARE,0.59
+public,US/Japan,Unsecured,COMPUTER SOFTWARE,0.59
+public,US/Japan,Unsecured,SEMICONDUCTORS,0.59
+public,US/Japan,Unsecured,UTILITIES NEC,0.22
+public,US/Japan,Unsecured,"UTILITIES, ELECTRIC",0.22
+public,US/Japan,Unsecured,"UTILITIES, GAS",0.22
+public,EU/Developing Countries,Unsecured,REST,0.6
+public,EU/Developing Countries,Unsecured,COMPUTER HARDWARE,0.71
+public,EU/Developing Countries,Unsecured,COMPUTER SOFTWARE,0.71
+public,EU/Developing Countries,Unsecured,SEMICONDUCTORS,0.71
+public,EU/Developing Countries,Unsecured,UTILITIES NEC,0.34
+public,EU/Developing Countries,Unsecured,"UTILITIES, ELECTRIC",0.34
+public,EU/Developing Countries,Unsecured,"UTILITIES, GAS",0.34
